@@ -50,7 +50,7 @@
                                 @error('correo')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
-                            </div>
+                        </div>
                             
                             <div class="col-2 form-group">
                                 <label for="telefono" class="form-label">Teléfono</label>
@@ -102,37 +102,31 @@
                         </div>
                     </div>
 
-
-
-            
                     <div class="justify">
                         <div class="tooltip">
                             <span class="color-disponible"></span>
                             <span class="tooltip-text">Esta línea indica las fechas disponibles para reservar</span>
                         </div>
-                 <h3>Fechas Disponibles</h3>
-                
-                    <ul id="fechas-disponibles"></ul>
-                </div>
+                        <h3>Fechas Disponibles</h3>
+                        <ul id="fechas-disponibles"></ul>
+                        </div>
 
-                <div class="justify">
-                    <h2>Empleado </h2>
-                    <div id="empleado-nombre"></div>
-                </div>
+                        <div class="justify">
+                            <h2>Empleado </h2>
+                            <div id="empleado-nombre"></div>
+                        </div>
 
-                <div id="mensaje-error" style="color: red;"></div>
-                
-                <div class="container mt-5">
-                    <div id='calendar'></div>
-                    <ul id="eventos-exteriores" style="list-style-type: none; padding: 0;">
-                        <!-- Aquí se agregarán los eventos externos -->
-                    </ul>
-                </div>
-                
-
+                        <div id="mensaje-error" style="color: red;"></div>
+                        
+                        <div class="container mt-5">
+                            <div id='calendar'></div>
+                            <ul id="eventos-exteriores" style="list-style-type: none; padding: 0;">
+                                <!-- Aquí se agregarán los eventos externos -->
+                            </ul>
+                        </div>
                         <div class="row" style="margin-top: 20px;">
                             <div class="col-2" style="margin-bottom: 5px; margin: 15px;">
-                                <button type="submit" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; background-color: #000000; color: #fff; cursor: pointer;">Guardar</button>
+                                <button type="submit" style="width: 160%; margin-left:100px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; background-color: #000000; color: #fff; cursor: pointer;">Guardar</button>
                             </div>
                         </div>
                     </form>
@@ -144,28 +138,14 @@
 
 
 
+
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css' rel='stylesheet' />
 <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://unpkg.com/tippy.js@6"></script>
-
-
-
-
-<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css' rel='stylesheet' />
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js'></script>
 
-
-<div class="row">
-    <div class="col-2 form-group">
-        <label for="fecha" class="form-label">Fecha y Hora de Cita</label>
-        <input type="datetime-local" id="fecha" name="fecha" value="{{ old('fecha') }}" class="form-input" required>
-        <div id="mensaje-error" class="error-message"></div>
-        @error('fecha')
-            <div class="error-message">{{ $message }}</div>
-        @enderror
-    </div>
-</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
