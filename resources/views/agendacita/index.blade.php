@@ -160,8 +160,21 @@
                 const selectedDate = info.startStr.split("T")[0];
                 const selectedTime = info.startStr.split("T")[1].substring(0, 5);
                 const datetimeLocalFormat = `${selectedDate}T${selectedTime}`;
-                document.getElementById('fecha').value = datetimeLocalFormat; // Asignar al input
                 
+                // Asignar al input
+                document.getElementById('fecha').value = datetimeLocalFormat; 
+
+                // Obtener la hora seleccionada
+                const horaSeleccionada = parseInt(selectedTime.split(':')[0], 10); // Obtener la hora en formato 24 horas
+
+                // Validar que la hora esté entre 7 AM y 7 PM
+                if (horaSeleccionada < 7 || horaSeleccionada > 19) {
+                    document.getElementById('mensaje-error').innerHTML = "Error: Las citas solo pueden asignarse entre las 7:00 AM y las 7:00 PM.";
+                    document.getElementById('mensaje-error').style.color = "red";
+                    calendar.unselect(); // Desmarcar la selección
+                    return; // Salir de la función
+                }
+
                 if (fechasDisponibles.includes(selectedDate)) {
                     document.getElementById('mensaje-error').innerHTML = "La cita ha sido asignada exitosamente.";
                     document.getElementById('mensaje-error').style.color = "green";

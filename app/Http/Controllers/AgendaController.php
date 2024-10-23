@@ -117,30 +117,40 @@ class AgendaController extends Controller
     public function store(Request $request)
     {
         // Validación y captura de datos validados
-        $validatedData = $request->validate([
-            'nombres' => 'required|string|max:255',
-            'correo' => 'required|email',
-            'telefono' => 'required|string|max:15',
-            'tiposervicio' => 'required|string|max:255',
-            'empleado_id' => 'required|exists:empleados,id',
-            'fecha' => 'required|date_format:Y-m-d\TH:i',
-        ]);
-
-        // Formateo de la fecha usando Carbon
-        $fecha = Carbon::parse($validatedData['fecha'])->format('Y-m-d H:i:s');
-
-        // Guardar la nueva cita en la base de datos
-        Agenda::create([
-            'nombres' => $validatedData['nombres'],
-            'correo' => $validatedData['correo'],
-            'telefono' => $validatedData['telefono'],
-            'tiposervicio' => $validatedData['tiposervicio'],
-            'fecha' => $fecha,
-            'empleado_id' => $validatedData['empleado_id'],
-        ]);
-
-        // Mensaje de éxito y redirección
-        session()->flash('success', 'Cita agendada correctamente');
-        return redirect()->route('agendacita.index');
-    }
+            // Validación de los campos del formulario
+            $validatedData = $request->validate([
+                'nombres' => 'required|string|max:255',
+                'correo' => 'required|email',
+                'telefono' => 'required|string|max:15',
+                'tiposervicio' => 'required|string|max:255',
+                'empleado_id' => 'required|exists:empleados,id',
+                'fecha' => 'required|date_format:Y-m-d\TH:i',
+            ]);
+        
+            // Formateo de la fecha usando Carbon
+            $fecha = Carbon::parse($validatedData['fecha']);
+            
+            // Obtener la hora seleccionada
+            $hora = $fecha->format('H'); // Formato 24 horas
+        
+            // Validar que la hora esté entre 7 AM y 7 PM
+            if ($hora < 7 || $hora > 19) {
+                return redirect()->back()->withErrors(['fecha' => 'Las citas solo pueden asignarse entre las 7:00 AM y las 7:00 PM.']);
+            }
+        
+            // Guardar la nueva cita en la base de datos
+            Agenda::create([
+                'nombres' => $validatedData['nombres'],
+                'correo' => $validatedData['correo'],
+                'telefono' => $validatedData['telefono'],
+                'tiposervicio' => $validatedData['tiposervicio'],
+                'fecha' => $fecha->format('Y-m-d H:i:s'), // Formatear a la base de datos
+                'empleado_id' => $validatedData['empleado_id'],
+            ]);
+        
+            // Mensaje de éxito y redirección
+            session()->flash('success', 'Cita agendada correctamente');
+            return redirect()->route('agendacita.index');
+        }
+        
 }

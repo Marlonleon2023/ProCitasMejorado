@@ -115,9 +115,7 @@
                             <div class="modal" id="editEventModal" data-animation="slideInOut">
                                 <div class="modal-dialog">
                                     <header class="modal-header">
-                                        <h5>Modificar Fecha y Hora  <button class="close-modal" aria-label="close modal" data-close>
-                                            ✕  
-                                        </button></h5>
+                                        <h5>Modificar Fecha y Hora <button type="button" class="close-modal" aria-label="close modal" data-close>✕</button></h5>
                                         
                                     </header>
                                     <hr class="modal-header-hr">
@@ -168,38 +166,42 @@
     const isVisible = "is-visible";
 
     // Abrir el modal y rellenar los campos de fecha y hora
-    // Abrir el modal y rellenar los campos de fecha y hora
-    for (const el of openEls) {
-    el.addEventListener("click", function() {
-        const modalId = this.dataset.open;
-        const modal = document.getElementById(modalId);
+    openEls.forEach(el => {
+        el.addEventListener("click", function() {
+            const modalId = this.dataset.open;
+            const modal = document.getElementById(modalId);
 
-        // Aquí puedes verificar si el modal se obtiene correctamente
-        if (modal) {
-            // Rellenar los campos de fecha y hora
-            const fecha = document.getElementById('fechaSeleccionada').value; 
-            const hora = document.getElementById('horaSeleccionada').value; 
+            if (modal) {
+                // Obtener fecha y hora del campo hidden
+                const fechaHora = document.getElementById('datesemana').value;
 
-            document.getElementById('modalDate').value = fecha || '';
-            document.getElementById('modalTime').value = hora || '';
+                if (fechaHora) {
+                    // Separar la fecha y la hora
+                    const [fecha, hora] = fechaHora.split('T');
 
-            modal.classList.add(isVisible);
-        } else {
-            console.error('Modal no encontrado: ', modalId);
-        }
+
+                    // Asignar valores al modal en el formato adecuado
+                    document.getElementById('modalDate').value = fecha || '';
+                    document.getElementById('modalTime').value = hora ? hora.slice(0, 5) : ''; // HH:MM
+                }
+
+                // Mostrar el modal
+                modal.classList.add(isVisible);
+            } else {
+                console.error('Modal no encontrado: ', modalId);
+            }
+        });
     });
-}
-
 
     // Cerrar el modal
-    for (const el of closeEls) {
+    closeEls.forEach(el => {
         el.addEventListener("click", function() {
             this.closest('.modal').classList.remove(isVisible);
         });
-    }
+    });
 
     document.addEventListener("click", e => {
-        if (e.target.classList.contains("modal") && e.target.classList.contains("is-visible")) {
+        if (e.target.classList.contains("modal") && e.target.classList.contains(isVisible)) {
             e.target.classList.remove(isVisible);
         }
     });
@@ -210,7 +212,7 @@
         }
     });
 
-    // Código para inicializar el calendario y gestionar eventos
+    // Inicializar el calendario y gestionar eventos
     document.addEventListener('DOMContentLoaded', function() {
         const calendarEl = document.getElementById('calendar');
 
@@ -220,7 +222,7 @@
                 {
                     title: 'Cita Agendada',
                     start: '{{ $empleado->datesemana }}', // Asegúrate de que esta variable tenga el valor correcto
-                    allDay: false // Cambiado a false para manejar datetime
+                    allDay: false
                 }
             ],
             dateClick: function(info) {
@@ -237,30 +239,34 @@
             const newDate = document.getElementById('modalDate').value;
             const newTime = document.getElementById('modalTime').value;
 
-            // Asegúrate de que la hora esté en el formato correcto
-            const formattedTime = newTime.padStart(5, '0'); // Formatea la hora si es necesario (debe estar en formato HH:MM)
+            if (newDate && newTime) {
+                // Formatear la hora a HH:MM y combinar con la fecha
+                const formattedTime = newTime.padStart(5, '0');
+                const combinedDateTime = `${newDate}T${formattedTime}:00`; // YYYY-MM-DDTHH:MM:SS
 
-            // Combina la fecha y la hora en un solo valor datetime
-            const combinedDateTime = `${newDate} ${formattedTime}`; // Usar espacio en lugar de 'T' para el formato correcto
 
-            // Asigna el valor combinado al campo correspondiente
-            document.getElementById('datesemana').value = combinedDateTime;
 
-            // Limpiar eventos anteriores
-            calendar.getEvents().forEach(event => {
-                if (event.title === 'Cita Agendada') {
-                    event.remove();
-                }
-            });
+                // Asignar el valor al campo hidden
+                document.getElementById('datesemana').value = combinedDateTime;
 
-            // Agregar el nuevo evento
-            calendar.addEvent({
-                title: 'Cita Agendada',
-                start: combinedDateTime,
-                allDay: false // Cambiado a false ya que estás usando datetime
-            });
+                // Actualizar el calendario
+                calendar.getEvents().forEach(event => {
+                    if (event.title === 'Cita Agendada') {
+                        event.remove();
+                    }
+                });
 
-            document.getElementById('editEventModal').classList.remove(isVisible);
+                // Agregar el nuevo evento
+                calendar.addEvent({
+                    title: 'Cita Agendada',
+                    start: combinedDateTime,
+                    allDay: false
+                });
+
+                document.getElementById('editEventModal').classList.remove(isVisible);
+            } else {
+                console.error("Fecha o hora no seleccionadas.");
+            }
         });
 
         // Eliminar el evento y limpiar campos
@@ -279,6 +285,8 @@
         });
     });
 </script>
+
+
 
 
 
