@@ -104,15 +104,24 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            @role('usuario')
             <x-responsive-nav-link :href="route('agendacita.index')" :active="request()->routeIs('agendacita')">
                 {{ __('Book Appointment') }}
             </x-responsive-nav-link>
-             <x-responsive-nav-link :href="route('empleado.index')" :active="request()->routeIs('empleado')">
-                {{ __('Employee') }}
-            </x-responsive-nav-link>
+            @endrole
+            
+            @role('Empleado')
             <x-responsive-nav-link :href="route('citasAgendadas.index')" :active="request()->routeIs('citasAgendadas')">
                 {{ __('Booked Appointments') }}
             </x-responsive-nav-link>
+            @endrole
+
+            @role('admin')
+            <x-responsive-nav-link :href="route('empleado.index')" :active="request()->routeIs('empleado')">
+                {{ __('Employee') }}
+            </x-responsive-nav-link>
+
             <x-responsive-nav-link :href="route('listaEmpleado.index')" :active="request()->routeIs('listaEmpleado')">
                 {{ __('Employee List') }}
             </x-responsive-nav-link>
@@ -124,6 +133,7 @@
             <x-responsive-nav-link :href="route('listadoPermisos.index')" :active="request()->routeIs('listadoPermisos')">
                 {{ __('Listado Permisos') }}
             </x-responsive-nav-link>
+            @endrole
             
         </div>
 

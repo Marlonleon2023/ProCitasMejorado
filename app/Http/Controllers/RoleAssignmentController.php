@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class RoleAssignmentController extends Controller
 {
+
+
+
+
+
+    
     // Método para mostrar la lista de usuarios y roles
     public function index()
     {
@@ -16,12 +22,26 @@ class RoleAssignmentController extends Controller
         return view('listadoPermisos.index', compact('users', 'roles')); // Envía los datos a la vista
     }
 
+
+
+
+
+
+
     // Método para mostrar la lista de roles
     public function showRoles()
     {
         $roles = Role::all(); // Obtiene todos los roles disponibles
         return view('listadoRoles.index', compact('roles')); // Envía los datos a la vista
     }
+
+
+
+
+
+
+
+
 
     // Método para asignar un rol a un usuario
     public function assignRole(Request $request)
@@ -37,6 +57,10 @@ class RoleAssignmentController extends Controller
         return redirect()->route('listadoPermisos.index')->with('error', 'Usuario o rol no encontrado');
     }
 
+
+
+
+
     // Método para eliminar el rol de un usuario
     public function removeRole(Request $request)
     {
@@ -47,6 +71,12 @@ class RoleAssignmentController extends Controller
         }
         return redirect()->route('listadoPermisos.index')->with('error', 'Usuario no encontrado');
     }
+
+
+
+
+
+
 
     // Método para crear un nuevo rol
     public function store(Request $request)
@@ -62,19 +92,27 @@ class RoleAssignmentController extends Controller
         return redirect()->route('listadoRoles.index')->with('success', 'Rol creado correctamente');
     }
 
+
+
+
+
+
+
     // Método para actualizar un rol
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'role_name' => 'required|unique:roles,name,'.$id.'|max:255',
-    ]);
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'role_name' => 'required|unique:roles,name,'.$id.'|max:255',
+        ]);
 
-    $role = Role::findOrFail($id);
-    $role->name = $request->role_name;
-    $role->save();
+        $role = Role::findOrFail($id);
+        $role->name = $request->role_name;
+        $role->save();
 
-    return redirect()->route('listadoRoles.index')->with('success', 'Rol actualizado correctamente');
-}
+        return redirect()->route('listadoRoles.index')->with('success', 'Rol actualizado correctamente');
+    }
+
+
 
 
     // Método para eliminar un rol
@@ -85,5 +123,9 @@ public function update(Request $request, $id)
 
         return redirect()->route('listadoRoles.index')->with('success', 'Rol eliminado correctamente');
     }
+
+
+
+
 }
 
