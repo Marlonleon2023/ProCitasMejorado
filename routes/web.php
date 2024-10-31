@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\AgendaController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoleAssignmentController;
 
 // Ruta principal
 Route::get('/', function () {
@@ -39,14 +40,37 @@ Route::middleware(['auth', 'verified'])->group(function () {
    
 
 
-    Route::get('/agendafecha/{empleadoId}', [AgendaController::class, 'show'])->name('agendacita.index');
+    //Ruta de Roles
+// Mostrar la lista de usuarios y roles
+// Ruta para mostrar la lista de roles
+Route::get('/listado-roles', [RoleAssignmentController::class, 'showRoles'])->name('listadoRoles.index');
+
+// Ruta para mostrar la lista de permisos
+Route::get('/listado-permisos', [RoleAssignmentController::class, 'index'])->name('listadoPermisos.index');
+
+// Asignar un rol a un usuario
+Route::post('/roles/assign', [RoleAssignmentController::class, 'assignRole'])->name('roles.assign');
+
+// Eliminar un rol de un usuario
+Route::post('/roles/remove', [RoleAssignmentController::class, 'removeRole'])->name('roles.remove');
+
+Route::put('/roles/{id}', [RoleAssignmentController::class, 'update'])->name('roles.update');
+
+
+// Almacenar un nuevo rol
+Route::post('/roles/store', [RoleAssignmentController::class, 'store'])->name('roles.store');
+
+// Eliminar un rol existente
+Route::delete('/roles/{id}', [RoleAssignmentController::class, 'destroy'])->name('roles.destroy');
+
+
 
 
     // DATOS DE LA AGENDA ACTUALIZAR EDITAR ELIMINAR  
-     Route::delete('/deleteCitas/{id}', [AgendaController::class, 'destroy'])->name('deleteCitas.destroy');
+    Route::delete('/deleteCitas/{id}', [AgendaController::class, 'destroy'])->name('deleteCitas.destroy');
     Route::put('/updateAgendado/{id}', [AgendaController::class, 'update'])->name('updateAgendado.update');
     Route::get('/editarAgendados/{id}', [AgendaController::class, 'editAgendado'])->name('editarAgendados.index');
-
+    Route::get('/agendafecha/{empleadoId}', [AgendaController::class, 'show'])->name('agendacita.index');
 
    
 

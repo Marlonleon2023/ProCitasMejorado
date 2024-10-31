@@ -10,26 +10,47 @@
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('agendacita.index')" :active="request()->routeIs('dashboard')">
-                        {{ __('Agenda Cita') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('empleado.index')" :active="request()->routeIs('dashboard')">
-                        {{ __('Empleado') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('citasAgendadas.index')" :active="request()->routeIs('dashboard')">
-                        {{ __('Citas Agendadas') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('listaEmpleado.index')" :active="request()->routeIs('dashboard')">
-                        {{ __('Lista Empleados') }}
-                    </x-nav-link>
-                    
-                </div>
-            </div>
+        <!-- Navigation Links -->
+        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+            <!-- Enlace visible para todos -->
+            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                {{ __('Dashboard') }}
+            </x-nav-link>
+
+            <!-- Enlaces para usuarios con rol 'usuario' -->
+            @role('usuario')
+                <x-nav-link :href="route('agendacita.index')" :active="request()->routeIs('agendacita.index')">
+                    {{ __('Agenda Cita') }}
+                </x-nav-link>
+            @endrole
+
+            <!-- Enlaces para gestión de empleados -->
+            @role('admin')
+                <x-nav-link :href="route('empleado.index')" :active="request()->routeIs('empleado.index')">
+                    {{ __('Empleado') }}
+                </x-nav-link>
+                
+                <x-nav-link :href="route('listaEmpleado.index')" :active="request()->routeIs('listaEmpleado.index')">
+                    {{ __('Lista Empleados') }}
+                </x-nav-link>
+
+                <x-nav-link :href="route('listadoRoles.index')" :active="request()->routeIs('listadoRoles.index')">
+                    {{ __('Listado Roles') }}
+                </x-nav-link>
+
+                <x-nav-link :href="route('listadoPermisos.index')" :active="request()->routeIs('listadoPermisos.index')">
+                    {{ __('Listado Permisos') }}
+                </x-nav-link>
+            @endrole
+
+            <!-- Enlaces para empleados -->
+            @role('Empleado')
+                <x-nav-link :href="route('citasAgendadas.index')" :active="request()->routeIs('citasAgendadas.index')">
+                    {{ __('Citas Agendadas') }}
+                </x-nav-link>
+            @endrole
+        </div>
+
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -94,6 +115,14 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('listaEmpleado.index')" :active="request()->routeIs('listaEmpleado')">
                 {{ __('Employee List') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('listadoRoles.index')" :active="request()->routeIs('listadoRoles')">
+                {{ __('Listado Roles') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('listadoPermisos.index')" :active="request()->routeIs('listadoPermisos')">
+                {{ __('Listado Permisos') }}
             </x-responsive-nav-link>
             
         </div>
