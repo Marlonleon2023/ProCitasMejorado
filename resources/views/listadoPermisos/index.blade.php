@@ -19,7 +19,7 @@
                     <th>Email</th>
                     <th>Rol Actual</th>
                     <th>Asignar Nuevo Rol</th>
-                    <th>Eliminar Rol</th> <!-- Nueva columna para eliminar rol -->
+                    <th>Eliminar Rol</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,17 +29,7 @@
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->getRoleNames()->implode(', ') }}</td>
                         <td>
-                            <form action="{{ route('roles.assign') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="user_id" value="{{ $user->id }}">
-                                <select name="role_id" class="form-control">
-                                    <option value="">Sin rol</option> <!-- Opción para eliminar rol -->
-                                    @foreach($roles as $role)
-                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
-                                    @endforeach
-                                </select>
-                                <button type="submit" class="btn btn-success mt-2">Asignar</button>
-                            </form>
+                            <button type="button" class="btn btn-success mt-2" onclick="showAssignRole(this, '{{ $user->id }}')">Asignar</button>
                         </td>
                         <td>
                             <form action="{{ route('roles.remove') }}" method="POST" style="display: inline;">
@@ -52,8 +42,27 @@
                 @endforeach
             </tbody>
         </table>
-    </div>
 
+        <div id="assign-role-modal" class="assign-role-container" style="display: none;">
+            <h3>Asignar Nuevo Rol</h3>
+            <br>
+            <form id="roleAssignForm" action="{{ route('roles.assign') }}" method="POST">
+                @csrf
+                <input type="hidden" name="user_id" id="user_id">
+                <select name="role_id" class="form-control">
+                    <option value="">Sin rol</option>
+                    @foreach($roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                    @endforeach
+                </select>
+                <br>
+                <br>
+                <hr>
+                <button type="submit" class="btn btn-success mt-2">Confirmar</button>
+                <button type="button" class="btn btn-danger mt-2" onclick="hideAssignRole()">Cancelar</button>
+            </form>
+        </div>
+    </div>
 </x-app-layout>
 
 <!-- Incluye jQuery antes de DataTables -->
@@ -74,6 +83,17 @@
             ]
         });
     });
+
+    function showAssignRole(button, userId) {
+        const modal = document.getElementById('assign-role-modal');
+        modal.style.display = "block";
+        document.getElementById('user_id').value = userId; // Establece el ID del usuario en el formulario
+    }
+
+    function hideAssignRole() {
+        const modal = document.getElementById('assign-role-modal');
+        modal.style.display = "none"; // Oculta el modal
+    }
 </script>
 
 <style>
@@ -82,32 +102,63 @@
         padding-left: 30px;
     }
 
-    /* Estilo para el botón Asignar */
     .btn-success {
-        background-color: #28a745; /* Color verde */
-        border-color: #28a745; /* Color del borde */
+        background-color: #28a745;
+        border-color: #28a745;
         border-radius: 5px;
         padding: 5px;
-        margin-left: 20px;
+        margin-left: 0px;
         color: #ffffff;
     }
 
     .btn-danger {
-        background-color: #dc3545; /* Color rojo */
-        border-color: #dc3545; /* Color del borde */
+        background-color: #dc3545;
+        border-color: #dc3545;
         border-radius: 5px;
         padding: 5px;
-        margin-left: 20px;
+        margin-left: 110px;
         color: #ffffff;
     }
 
     .btn-success:hover {
-        background-color: #1d8435; 
-        border-color: #28a745; 
+        background-color: #1d8435;
+        border-color: #28a745;
     }
 
     .btn-danger:hover {
-        background-color: #c82333; 
-        border-color: #dc3545; 
+        background-color: #c82333;
+        border-color: #dc3545;
     }
+
+    .assign-role-container {
+        border: 1px solid #28a745; /* Bordes del recuadro */
+        border-radius: 5px; /* Bordes redondeados */
+        padding: 10px; /* Espaciado interno */
+        background-color: #f8f9fa; /* Color de fondo */
+        margin-top: 10px; /* Espacio superior */
+        position: absolute; /* Posición absoluta */
+        top: 190px; /* Ajusta la distancia del top según necesites */
+        left: 50%; /* Centrado horizontal */
+        transform: translateX(-50%); /* Alinear al centro */
+        z-index: 1000; /* Asegúrate de que esté por encima */
+        width: 300px; /* Ancho del recuadro */
+        display: none; /* Oculto inicialmente */
+        height: 200px;
+        
+    }
+
+    table {
+    width: 100%; /* Asegúrate de que la tabla ocupe todo el ancho del contenedor */
+    table-layout: fixed; /* Para un mejor control sobre el ancho de las columnas */
+}
+
+th, td {
+    text-align: center; /* Centrar el texto en las celdas */
+    vertical-align: middle; /* Centrar verticalmente el contenido */
+}
+
+/* Estilo opcional para ajustar el ancho de las columnas */
+th {
+    width: 20%; /* Ajusta el ancho según tus necesidades */
+}
 </style>
